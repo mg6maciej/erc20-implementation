@@ -30,8 +30,9 @@ contract ERC20 {
 
     function transfer(address to, uint amount) external returns (bool) {
         require(to != 0);
-        require(amount <= balances[msg.sender]);
-        balances[msg.sender] -= amount;
+        uint balanceMsgSender = balances[msg.sender];
+        require(amount <= balanceMsgSender);
+        balances[msg.sender] = balanceMsgSender - amount;
         balances[to] += amount;
         emit Transfer(msg.sender, to, amount);
         return true;
@@ -41,11 +42,12 @@ contract ERC20 {
         require(to != 0);
         uint allowedForMsgSender = allowed[from][msg.sender];
         require(amount <= allowedForMsgSender);
-        require(amount <= balances[from]);
-        balances[from] -= amount;
+        uint balanceFrom = balances[from];
+        require(amount <= balanceFrom);
+        balances[from] = balanceFrom - amount;
         balances[to] += amount;
         if (allowedForMsgSender != MAX_UINT) {
-            allowed[from][msg.sender] -= amount;
+            allowed[from][msg.sender] = allowedForMsgSender - amount;
         }
         emit Transfer(from, to, amount);
         return true;

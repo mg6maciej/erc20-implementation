@@ -15,9 +15,9 @@ contract ERC20 {
     uint constant public decimals = 18;
     uint constant public totalSupply = 10000 * (10 ** decimals);
 
-    constructor(address owner) public {
-        balances[owner] = totalSupply;
-        emit Transfer(0, owner, totalSupply);
+    constructor() public {
+        balances[msg.sender] = totalSupply;
+        emit Transfer(0, msg.sender, totalSupply);
     }
 
     function balanceOf(address owner) external view returns (uint) {

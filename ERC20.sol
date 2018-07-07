@@ -7,34 +7,26 @@ contract ERC20 {
 
     uint private constant MAX_UINT = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-    mapping (address => uint) private balances;
-    mapping (address => mapping (address => uint)) private allowed;
-
     string public constant name = "ERC20 Token";
     string public constant symbol = "ERC20";
     uint public constant decimals = 18;
     uint public constant totalSupply = 10000 * (10 ** decimals);
 
+    mapping (address => uint) public balanceOf;
+    mapping (address => mapping (address => uint)) public allowance;
+
     constructor() public {
-        balances[msg.sender] = totalSupply;
+        balanceOf[msg.sender] = totalSupply;
         emit Transfer(0, msg.sender, totalSupply);
-    }
-
-    function balanceOf(address owner) external view returns (uint) {
-        return balances[owner];
-    }
-
-    function allowance(address owner, address spender) external view returns (uint) {
-        return allowed[owner][spender];
     }
 
     function transfer(address to, uint amount) external returns (bool) {
         require(to != address(this));
         require(to != 0);
-        uint balanceOfMsgSender = balances[msg.sender];
+        uint balanceOfMsgSender = balanceOf[msg.sender];
         require(balanceOfMsgSender >= amount);
-        balances[msg.sender] = balanceOfMsgSender - amount;
-        balances[to] += amount;
+        balanceOf[msg.sender] = balanceOfMsgSender - amount;
+        balanceOf[to] += amount;
         emit Transfer(msg.sender, to, amount);
         return true;
     }
@@ -42,21 +34,21 @@ contract ERC20 {
     function transferFrom(address from, address to, uint amount) external returns (bool) {
         require(to != address(this));
         require(to != 0);
-        uint allowedForMsgSender = allowed[from][msg.sender];
-        require(allowedForMsgSender >= amount);
-        if (allowedForMsgSender != MAX_UINT) {
-            allowed[from][msg.sender] = allowedForMsgSender - amount;
+        uint allowanceMsgSender = allowance[from][msg.sender];
+        require(allowanceMsgSender >= amount);
+        if (allowanceMsgSender != MAX_UINT) {
+            allowance[from][msg.sender] = allowanceMsgSender - amount;
         }
-        uint balanceOfFrom = balances[from];
+        uint balanceOfFrom = balanceOf[from];
         require(balanceOfFrom >= amount);
-        balances[from] = balanceOfFrom - amount;
-        balances[to] += amount;
+        balanceOf[from] = balanceOfFrom - amount;
+        balanceOf[to] += amount;
         emit Transfer(from, to, amount);
         return true;
     }
 
     function approve(address spender, uint amount) external returns (bool) {
-        allowed[msg.sender][spender] = amount;
+        allowance[msg.sender][spender] = amount;
         emit Approval(msg.sender, spender, amount);
         return true;
     }

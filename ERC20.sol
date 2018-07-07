@@ -29,7 +29,8 @@ contract ERC20 {
     }
 
     function transfer(address to, uint amount) external returns (bool) {
-        require(to != 0 && to != address(this));
+        require(to != address(this));
+        require(to != 0);
         uint balanceOfMsgSender = balances[msg.sender];
         require(balanceOfMsgSender >= amount);
         balances[msg.sender] = balanceOfMsgSender - amount;
@@ -39,7 +40,8 @@ contract ERC20 {
     }
 
     function transferFrom(address from, address to, uint amount) external returns (bool) {
-        require(to != 0 && to != address(this));
+        require(to != address(this));
+        require(to != 0);
         uint allowedForMsgSender = allowed[from][msg.sender];
         require(allowedForMsgSender >= amount);
         if (allowedForMsgSender != MAX_UINT) {

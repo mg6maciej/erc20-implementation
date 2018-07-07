@@ -5,15 +5,15 @@ contract ERC20 {
     event Transfer(address indexed from, address indexed to, uint amount);
     event Approval(address indexed owner, address indexed spender, uint amount);
 
-    uint constant private MAX_UINT = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+    uint private constant MAX_UINT = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
     mapping (address => uint) private balances;
     mapping (address => mapping (address => uint)) private allowed;
 
-    string constant public name = "ERC20 Token";
-    string constant public symbol = "ERC20";
-    uint constant public decimals = 18;
-    uint constant public totalSupply = 10000 * (10 ** decimals);
+    string public constant name = "ERC20 Token";
+    string public constant symbol = "ERC20";
+    uint public constant decimals = 18;
+    uint public constant totalSupply = 10000 * (10 ** decimals);
 
     constructor() public {
         balances[msg.sender] = totalSupply;
